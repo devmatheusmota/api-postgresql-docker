@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  app:
+    build: .
+    command: npm start
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/app
+    links:
+      - migration
+      - db
+  migration:
+    build: .
+    command: npm run migrate
+    volumes:
+      - .:/usr/app
+    links:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
