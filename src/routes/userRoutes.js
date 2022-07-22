@@ -80,18 +80,12 @@ router.delete('/users/:id', async (req, res) => {
 
 //Create user
 router.post('/users', async (req, res) => {
-	const { name, email, postTitle, profileBio } = req.body;
+	const { name, email } = req.body;
 	try {
 		await prisma.user.create({
 			data: {
 				name: name,
 				email: email,
-				posts: {
-					create: { title: postTitle },
-				},
-				profile: {
-					create: { bio: profileBio },
-				},
 			},
 		});
 		return res.status(201).json({ message: 'User created.' });

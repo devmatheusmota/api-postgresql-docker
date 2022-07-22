@@ -48,7 +48,7 @@ router.get('/posts/author/:id', async (req, res) => {
 	const authorId = parseInt(id);
 
 	try {
-		const post = await prisma.post.findFirst({
+		const post = await prisma.post.findMany({
 			where: {
 				id: authorId,
 			},
