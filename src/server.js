@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 
 async function main() {
 	app.get('/', (req, res) => {
-		res.jsonp({ message: 'Welcome to my Social Network API look-a-like' });
+		res.json({ message: 'Welcome to my Social Network API look-a-like' });
 	});
 	app.use(userRoutes);
 	app.use(postRoutes);
