@@ -8,17 +8,13 @@ const router = Router();
 //Return all users
 router.get('/users', ensureAuthenticated, async (req, res) => {
 	try {
-		const allUsers = await prisma.user.findMany(
-			{
-				where: {
-					id: 'ffc8db0a-a5ff-4af2-bb8e-bec4638e9d26',
-				},
-				select: {
-					name: true,
-					email: true,
-				},
-			} | undefined
-		);
+		const allUsers = await prisma.user.findMany({
+			select: {
+				id: true,
+				name: true,
+				email: true,
+			},
+		});
 
 		return res.json({ allUsers });
 	} catch (error) {
@@ -42,7 +38,6 @@ router.get('/users/:id', ensureAuthenticated, async (req, res) => {
 		return res.status(400).json({ error: error });
 	}
 });
-
 //Update user by ID
 router.put('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;

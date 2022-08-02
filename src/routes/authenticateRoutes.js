@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
 
 	const token = sign({}, '2f5d317b-0832-4a01-92fe-eab8c13dd910', {
 		subject: userAlreadyExists.id,
-		expiresIn: '20s',
+		expiresIn: '100s',
 	});
 
 	return res.json({ token });
