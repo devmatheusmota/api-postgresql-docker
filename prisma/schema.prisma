@@ -19,21 +19,28 @@ model Post {
   content   String? 
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
   likes     Int? @default(0)
+
+  @@map("posts")
 }
 
 model Profile {
-  id     Int     @id @default(autoincrement())
+  id     String    @id @default(uuid())
   bio    String?
   user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+  userId String     @unique
+
+  @@map("profiles")
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  id        String      @id @default(uuid())
+  email     String      @unique
+  password  String      
+  name      String?
+  posts     Post[]
+  profile   Profile?
+
+  @@map("users")
 }

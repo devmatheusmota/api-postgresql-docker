@@ -1,19 +1,22 @@
 const { Router } = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma/client');
+const { hash } = require('bcryptjs');
+const ensureAuthenticated = require('../middleware/ensureAuthenticated');
 
 const router = Router();
-const prisma = new PrismaClient();
 
 //Return all users
-router.get('/users', async (req, res) => {
+router.get('/users', ensureAuthenticated, async (req, res) => {
 	try {
 		const allUsers = await prisma.user.findMany(
 			{
-				orderBy: [
-					{
-						id: 'asc',
-					},
-				],
+				where: {
+					id: 'ffc8db0a-a5ff-4af2-bb8e-bec4638e9d26',
+				},
+				select: {
+					name: true,
+					email: true,
+				},
 			} | undefined
 		);
 
@@ -24,7 +27,7 @@ router.get('/users', async (req, res) => {
 });
 
 //Return users by ID
-router.get('/users/:id', async (req, res) => {
+router.get('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const userId = parseInt(id);
 
@@ -41,7 +44,7 @@ router.get('/users/:id', async (req, res) => {
 });
 
 //Update user by ID
-router.put('/users/:id', async (req, res) => {
+router.put('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const { name, email } = req.body;
 	const userId = parseInt(id);
@@ -63,7 +66,7 @@ router.put('/users/:id', async (req, res) => {
 });
 
 //Remove user by ID (only works if the user doesn't have any posts or profiles)
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const userId = parseInt(id);
 	try {
@@ -80,12 +83,25 @@ router.delete('/users/:id', async (req, res) => {
 
 //Create user
 router.post('/users', async (req, res) => {
-	const { name, email } = req.body;
+	const { name, email, password } = req.body;
+
+	const userAlreadyExists = await prisma.user.findFirst({
+		where: {
+			email,
+		},
+	});
+
+	if (userAlreadyExists) {
+		throw new Error('User already exists');
+	}
+
+	const passwordHash = await hash(password, 8);
 	try {
 		await prisma.user.create({
 			data: {
-				name: name,
-				email: email,
+				name,
+				email,
+				password: passwordHash,
 			},
 		});
 		return res.status(201).json({ message: 'User created.' });
