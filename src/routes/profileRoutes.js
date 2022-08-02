@@ -1,8 +1,6 @@
 const { Router } = require('express');
-const { PrismaClient } = require('@prisma/client');
-
+const prisma = require('../prisma/client');
 const router = Router();
-const prisma = new PrismaClient();
 
 //Return all profiles
 router.get('/profiles', async (req, res) => {
