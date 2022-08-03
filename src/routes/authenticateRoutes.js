@@ -1,7 +1,9 @@
 const { Router } = require('express');
 const prisma = require('../prisma/client');
 const { compare } = require('bcryptjs');
-const { sign } = require('jsonwebtoken');
+const generateRefreshTokenProvider = require('../provider/GenerateRefreshTokenProvider');
+const generateTokenProvider = require('../provider/GenerateTokenProvider');
+const dayjs = require('dayjs');
 
 const router = Router();
 
@@ -24,12 +26,17 @@ router.post('/login', async (req, res) => {
 		throw new Error('Email or password incorrect.');
 	}
 
-	const token = sign({}, '2f5d317b-0832-4a01-92fe-eab8c13dd910', {
-		subject: userAlreadyExists.id,
-		expiresIn: '100s',
+	const token = await generateTokenProvider(userAlreadyExists.id);
+
+	await prisma.refreshToken.deleteMany({
+		where: {
+			userId: userAlreadyExists.id,
+		},
 	});
 
-	return res.json({ token });
+	const refreshToken = await generateRefreshTokenProvider(userAlreadyExists.id);
+
+	return res.json({ token, refreshToken });
 });
 
 module.exports = router;

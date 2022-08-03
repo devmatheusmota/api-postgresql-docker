@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const authenticateRoutes = require('./routes/authenticateRoutes');
+const refreshTokenRoutes = require('./routes/refreshTokenRoutes');
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
@@ -19,6 +20,7 @@ async function main() {
 		res.jsonp({ message: 'Welcome to my Social Network API look-a-like' });
 	});
 	app.use(authenticateRoutes);
+	app.use(refreshTokenRoutes);
 	app.use(userRoutes);
 	app.use(postRoutes);
 	app.use(profileRoutes);
