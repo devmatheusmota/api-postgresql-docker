@@ -3,7 +3,6 @@ const prisma = require('../prisma/client');
 const { compare } = require('bcryptjs');
 const generateRefreshTokenProvider = require('../provider/GenerateRefreshTokenProvider');
 const generateTokenProvider = require('../provider/GenerateTokenProvider');
-const dayjs = require('dayjs');
 
 const router = Router();
 

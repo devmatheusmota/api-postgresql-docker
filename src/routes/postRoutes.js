@@ -1,10 +1,11 @@
 const { Router } = require('express');
+const ensureAuthenticated = require('../middleware/ensureAuthenticated');
 const prisma = require('../prisma/client');
 
 const router = Router();
 
 //Return all posts
-router.get('/posts', async (req, res) => {
+router.get('/posts', ensureAuthenticated, async (req, res) => {
 	try {
 		const allPosts = await prisma.post.findMany(
 			{
@@ -23,7 +24,7 @@ router.get('/posts', async (req, res) => {
 });
 
 //Return posts by ID
-router.get('/posts/:id', async (req, res) => {
+router.get('/posts/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const postId = parseInt(id);
 
@@ -42,7 +43,7 @@ router.get('/posts/:id', async (req, res) => {
 });
 
 //Return posts by Author ID
-router.get('/posts/author/:id', async (req, res) => {
+router.get('/posts/author/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const authorId = parseInt(id);
 
@@ -59,7 +60,7 @@ router.get('/posts/author/:id', async (req, res) => {
 });
 
 //Update post's title by ID
-router.put('/posts/:id/title', async (req, res) => {
+router.put('/posts/:id/title', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const { title } = req.body;
 	const postId = parseInt(id);
@@ -80,7 +81,7 @@ router.put('/posts/:id/title', async (req, res) => {
 });
 
 //Update post's content by ID
-router.put('/posts/:id/content', async (req, res) => {
+router.put('/posts/:id/content', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const { content } = req.body;
 	const postId = parseInt(id);
@@ -101,7 +102,7 @@ router.put('/posts/:id/content', async (req, res) => {
 });
 
 //Update post's likes by ID (give a like in the post)
-router.put('/posts/:id/like', async (req, res) => {
+router.put('/posts/:id/like', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const postId = parseInt(id);
 
@@ -128,7 +129,7 @@ router.put('/posts/:id/like', async (req, res) => {
 });
 
 //Remove post by ID
-router.delete('/posts/:id', async (req, res) => {
+router.delete('/posts/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const postId = parseInt(id);
 
@@ -145,7 +146,7 @@ router.delete('/posts/:id', async (req, res) => {
 });
 
 //Create post
-router.post('/posts', async (req, res) => {
+router.post('/posts', ensureAuthenticated, async (req, res) => {
 	const { title, content, authorId, published } = req.body;
 
 	try {

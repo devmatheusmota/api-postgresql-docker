@@ -1,9 +1,10 @@
 const { Router } = require('express');
+const ensureAuthenticated = require('../middleware/ensureAuthenticated');
 const prisma = require('../prisma/client');
 const router = Router();
 
 //Return all profiles
-router.get('/profiles', async (req, res) => {
+router.get('/profiles', ensureAuthenticated, async (req, res) => {
 	try {
 		const allProfiles = await prisma.profile.findMany({
 			orderBy: [
@@ -20,7 +21,7 @@ router.get('/profiles', async (req, res) => {
 });
 
 //Return profile by user ID
-router.get('/profiles/:id', async (req, res) => {
+router.get('/profiles/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const userId = parseInt(id);
 
@@ -37,7 +38,7 @@ router.get('/profiles/:id', async (req, res) => {
 });
 
 //Update profile by user ID
-router.put('/profiles/:id', async (req, res) => {
+router.put('/profiles/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const { bio } = req.body;
 	const userId = parseInt(id);
@@ -58,7 +59,7 @@ router.put('/profiles/:id', async (req, res) => {
 });
 
 //Remove profile by user ID
-router.delete('/profiles/:id', async (req, res) => {
+router.delete('/profiles/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const userId = parseInt(id);
 
@@ -77,7 +78,7 @@ router.delete('/profiles/:id', async (req, res) => {
 });
 
 //Create profile
-router.post('/profiles', async (req, res) => {
+router.post('/profiles', ensureAuthenticated, async (req, res) => {
 	const { bio, userId } = req.body;
 
 	try {
