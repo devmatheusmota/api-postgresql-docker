@@ -25,12 +25,17 @@ router.get('/users', ensureAuthenticated, async (req, res) => {
 //Return users by ID
 router.get('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
-	const userId = parseInt(id);
+	const userId = id;
 
 	try {
 		const user = await prisma.user.findFirst({
 			where: {
 				id: userId,
+			},
+			select: {
+				id: true,
+				name: true,
+				email: true,
 			},
 		});
 		return res.json(user);
@@ -42,7 +47,7 @@ router.get('/users/:id', ensureAuthenticated, async (req, res) => {
 router.put('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
 	const { name, email } = req.body;
-	const userId = parseInt(id);
+	const userId = id;
 
 	try {
 		const user = await prisma.user.update({
@@ -63,7 +68,7 @@ router.put('/users/:id', ensureAuthenticated, async (req, res) => {
 //Remove user by ID (only works if the user doesn't have any posts or profiles)
 router.delete('/users/:id', ensureAuthenticated, async (req, res) => {
 	const { id } = req.params;
-	const userId = parseInt(id);
+	const userId = id;
 	try {
 		const user = await prisma.user.delete({
 			where: {
