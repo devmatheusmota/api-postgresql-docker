@@ -6,6 +6,8 @@ CRUD API desenvolvida em **NodeJS** com o framework **Express**, utilizando o ba
 
 Foi utilizado também o **Docker** para conteinerização do banco de dados e do servidor HTTP, e o **Docker Compose** para orquestrar esses containers.
 
+Update: recentemente foi adicionado autenticação via JWT.
+
 ---
 
 ## 🚀 Tecnologias utilizadas
@@ -17,6 +19,7 @@ Foi utilizado também o **Docker** para conteinerização do banco de dados e do
 - [Prisma](https://www.prisma.io/)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
+- [JSON Web Token (JWT)](https://jwt.io/)
 
 ---
 
@@ -74,6 +77,31 @@ $ docker-compose down
 # Usando a API
 
 Voce pode acessar a API usando os seguintes endpoints:
+
+## `/login`
+
+### `POST`
+
+- `/login` : Efetua login
+  - Body:
+    - `email: String` (requerido): Email do usuário
+    - `password: String` (requerido): Senha do usuário
+  - Retorno:
+    - `token: String`: Bearer token utilizado pra ter acesso a todas as rotas da API
+    - `refresh-token: String`: refresh token usado pra requerir um novo token de acesso após a expiração
+
+## `/refresh-token`
+
+### `POST`
+
+- `/refresh-token` : Faz a requisicao de um novo token de acesso
+  - Body:
+    - `refresh_token: String` (requerido): refresh token usado pra requerir um novo token de acesso após a expiração
+  - Retorno:
+    - `token: String`: Bearer token utilizado pra ter acesso a todas as rotas da API
+    - `newRefreshToken: String`: novo refresh token usado pra requerir um novo token de acesso após a expiração
+
+## Para ter acesso a todas as rotas da API é necessário inserir um token funcional no header de Auth das requisições
 
 ## `/users`
 
